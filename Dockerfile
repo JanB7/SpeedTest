@@ -1,16 +1,5 @@
 FROM mysql:latest as base
 
-#
-#Environment Variables
-#
-ENV SQLUSER='default'
-ENV SQLPASS='default'
-ENV DATABASE='Speedtest'
-# Interval Given in Seconds
-ENV INTERVAL=600
-ENV SQLHOST='localhost'
-ENV LOCALSQL='True'
-
 #####
 ##From https://github.com/docker-library/python/blob/master/Dockerfile-debian.template
 #####
@@ -27,6 +16,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 		libbluetooth-dev \
 		tk-dev \
 		uuid-dev \
+        wget \
+        apt-utils \
 	&& rm -rf /var/lib/apt/lists/*
 
 ENV GPG_KEY E3FF2839C048B25C084DEBE9B26995E310250568
@@ -34,8 +25,8 @@ ENV PYTHON_VERSION 3.9.2
 
 RUN set -ex \
 	\
-	&& wget -O python.tar.xz "https://www.python.org/ftp/python/${PYTHON_VERSION%%[a-z]*}/Python-$PYTHON_VERSION.tar.xz" \
-	&& wget -O python.tar.xz.asc "https://www.python.org/ftp/python/${PYTHON_VERSION%%[a-z]*}/Python-$PYTHON_VERSION.tar.xz.asc" \
+	&& wget --no-check-certificate -O python.tar.xz "https://www.python.org/ftp/python/${PYTHON_VERSION%%[a-z]*}/Python-$PYTHON_VERSION.tar.xz" \
+	&& wget --no-check-certificate -O python.tar.xz.asc "https://www.python.org/ftp/python/${PYTHON_VERSION%%[a-z]*}/Python-$PYTHON_VERSION.tar.xz.asc" \
 	&& export GNUPGHOME="$(mktemp -d)" \
 	&& gpg --batch --keyserver ha.pool.sks-keyservers.net --recv-keys "$GPG_KEY" \
 	&& gpg --batch --verify python.tar.xz.asc python.tar.xz \
@@ -104,8 +95,18 @@ RUN set -ex; \
 	rm -f get-pip.py
 
 #
-#Setup System
+#Setup System for custom code
 #
+
+RUN SQLPASS=pwgen 12,1
+#
+#Environment Variables
+#
+ENV SQLUSER='SpeedtestUser'
+ENV DATABASE='Speedtest'
+# Interval Given in Seconds
+ENV INTERVAL=600
+ENV SQLHOST='localhost'
 
 RUN apt-get update
 RUN apt-get -y dist-upgrade

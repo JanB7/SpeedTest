@@ -68,6 +68,7 @@ def sqlCommit(data):
 
 
 def main():
+    print(os.environ['SQLPASS'])
     createDbTables()
 
     while True:
