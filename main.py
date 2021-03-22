@@ -8,7 +8,7 @@ import time
 
 def getSqlConnection():
     sql_username = os.environ['SQLUSER']
-    sql_password = os.environ['SQLPASS']
+    sql_password = os.environ['MYSQL_ROOT_PASSWORD']
     sql_host = os.environ['SQLHOST']
     sql_db = os.environ['DATABASE']
 
@@ -24,7 +24,7 @@ def getSqlConnection():
 
 def createDbTables():
     sql_username = os.environ['SQLUSER']
-    sql_password = os.environ['SQLPASS']
+    sql_password = os.environ['MYSQL_ROOT_PASSWORD']
     sql_host = os.environ['SQLHOST']
     sql_db = os.environ['DATABASE']
 
@@ -38,22 +38,6 @@ def createDbTables():
     mysqldb.connect()
     mysql_com = mysqldb.cursor()
 
-    exits = False
-    databases = mysql_com.execute("SHOW DATABASES")
-    for database in databases:
-        if database == sql_db:
-            exits = True
-
-    if not exits:
-        mysql_com.execute("CREATE DATABASE %s", sql_db)
-    tables = mysql_com.execute("SHOW TABLES")
-
-    exits = False
-    for table in tables:
-        if table == 'results':
-            exits = True
-    if not exits:
-        mysql_com.execute("CREATE TABLE results")
 
     return
 
@@ -68,7 +52,7 @@ def sqlCommit(data):
 
 
 def main():
-    print(os.environ['SQLPASS'])
+    print(os.environ['MYSQL_ROOT_PASSWORD'])
     createDbTables()
 
     while True:

@@ -1,5 +1,8 @@
 FROM mysql:latest as base
 
+RUN apt-get update
+RUN apt-get -y dist-upgrade
+
 #####
 ##From https://github.com/docker-library/python/blob/master/Dockerfile-debian.template
 #####
@@ -95,11 +98,6 @@ RUN set -ex; \
 	rm -f get-pip.py
 
 #
-#Setup System for custom code
-#
-
-RUN SQLPASS=pwgen 12,1
-#
 #Environment Variables
 #
 ENV SQLUSER='SpeedtestUser'
@@ -108,8 +106,6 @@ ENV DATABASE='Speedtest'
 ENV INTERVAL=600
 ENV SQLHOST='localhost'
 
-RUN apt-get update
-RUN apt-get -y dist-upgrade
 RUN apt-get install gnupg1 apt-transport-https dirmngr
 RUN export INSTALL_KEY=379CE192D401AB61
 RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys $INSTALL_KEY
@@ -120,6 +116,8 @@ RUN apt-get -y autoremove
 
 RUN python3 pip install mysql-connector-python
 
-COPY main.py /entrypoint/main.py
+COPY initdb.sql /docker-entrypoint-initdb.d/initdb.sql
+COPY main.py /usr/local/bin/main.py
+COPY docker-entrypoint.sh /docker-entrypoint.sh
 
-CMD ["python3","/entrypoint/main.py"]
+CMD ["docker-entrypoint.sh"]
