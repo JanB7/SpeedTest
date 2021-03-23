@@ -1,0 +1,43 @@
+version: "3.9"
+
+services:
+  MySQL:
+    image: mysql
+    hostname: MySQL
+    restart: always
+    volumes: 
+    - /var/lib/mysql:/var/lib/mysql
+    command: --default-authentication-plugin=mysql_native_password
+    ports: 
+      - 3306:3306
+    env_file: .env
+    networks:
+      speedtestNET:
+        aliases: 
+          - MySQL
+
+
+  Speedtest:
+    image: speedtest
+    hostname: Speedtest
+    restart: always
+    env_file: .env
+    networks:
+      speedtestNET:
+        aliases: 
+          - Speedtest
+  
+  PhPMyAdmin:
+    image: phpmyadmin/phpmyadmin
+    restart: always
+    ports: 
+      - 80:80
+      - 443:443
+    env_file: .env
+    networks: 
+      speedtestNET:
+        aliases: 
+          - PhPMyAdmin
+
+networks:
+  speedtestNET:

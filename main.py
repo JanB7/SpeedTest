@@ -7,8 +7,8 @@ import time
 
 
 def getSqlConnection():
-    sql_username = os.environ['SQLUSER']
-    sql_password = os.environ['MYSQL_ROOT_PASSWORD']
+    sql_username = os.environ['MYSQL_USER']
+    sql_password = os.environ['MYSQL_PASSWORD']
     sql_host = os.environ['SQLHOST']
     sql_db = os.environ['DATABASE']
 
@@ -19,11 +19,12 @@ def getSqlConnection():
         database=sql_db
     )
 
+    mysql_con.autocommit = True
     return mysql_con
 
 
 def createDbTables():
-    sql_username = os.environ['SQLUSER']
+    sql_username = "root"
     sql_password = os.environ['MYSQL_ROOT_PASSWORD']
     sql_host = os.environ['SQLHOST']
     sql_db = os.environ['DATABASE']
@@ -37,22 +38,22 @@ def createDbTables():
     # Setup SQL db and tables if not exsistent
     mysqldb.connect()
     mysql_com = mysqldb.cursor()
-
+    for line in open("/docker-entrypoint-initdb.d/initdb.sql"):
+        cursor.execute(line)
 
     return
 
 
 def sqlCommit(data):
+
     connection = getSqlConnection()
-    connection.connect()
-
     mysql_com = connection.cursor()
-
+    mysql_com.execute(data)
     return
 
 
 def main():
-    print(os.environ['MYSQL_ROOT_PASSWORD'])
+    print(os.environ['MYSQL_PASSWORD'])
     createDbTables()
 
     while True:
