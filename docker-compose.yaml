@@ -2,7 +2,7 @@ version: "3.9"
 
 services:
   MySQL:
-    image: mysql
+    image: mysql:latest
     hostname: MySQL
     restart: always
     volumes: 

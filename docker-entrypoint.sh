@@ -1,16 +1,16 @@
 #!/bin/bash
 
-DATABASE= sed "s/'//g" <<< sed 's/"//g'  <<< $DATABASE
-EXPORT $DATABASE
+DATABASE= echo $DATABASE | sed "s/'//g" | sed 's/"//g' 
+echo "EXPORT $DATABASE"
 
-MYSQL_USER = sed "s/'//g" <<< sed 's/"//g'  <<< $MYSQL_USER
-EXPORT $MYSQL_USER
+MYSQL_USER = echo $MYSQL_USER | sed "s/'//g" | sed 's/"//g'
+echo "EXPORT $MYSQL_USER"
 
-MYSQL_PASSWORD = sed "s/'//g" <<< sed 's/"//g'  <<< $MYSQL_PASSWORD
-EXPORT MYSQL_PASSWORD
+MYSQL_PASSWORD = echo $MYSQL_PASSWORD | sed "s/'//g" | sed 's/"//g' 
+echo "EXPORT $MYSQL_PASSWORD"
 
 SQLHOST= sed "s/'//g" <<< sed 's/"//g'  <<< $SQLHOST
-EXPORT $SQLHOST
+echo "EXPORT $SQLHOST"
 
 sed -i -e "s/speedtest/$DATABASE/g" /docker-entrypoint-initdb.d/initdb.sql
 sed -i -e "s/SpeedtestUser/$MYSQL_USER/g" /docker-entrypoint-initdb.d/initdb.sql

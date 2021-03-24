@@ -39,7 +39,7 @@ def createDbTables():
     mysqldb.connect()
     mysql_com = mysqldb.cursor()
     for line in open("/docker-entrypoint-initdb.d/initdb.sql"):
-        cursor.execute(line)
+        mysql_com.execute(line)
 
     return
 

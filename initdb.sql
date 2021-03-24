@@ -1,7 +1,7 @@
-CREATE DATABASE IF NOT EXISTS `speedtest` DEFAULT CHARACTER SET utf8mb4;
-USE "speedtest";
-CREATE TABLE  IF NOT EXISTS  `results` (`index` int NOT NULL DEFAULT '1', `TimeStamp` timestamp NULL DEFAULT NULL,  `Ping.Jitter` decimal(3,3) DEFAULT NULL,  `Ping.Latency` decimal(5,5) DEFAULT NULL,  `Download.Bandwith` int DEFAULT NULL,  `Download.Bytes` int DEFAULT NULL,  `Download.Elapsed` smallint DEFAULT NULL,  `Upload.Bandwith` int DEFAULT NULL,  `Upload.Bytes` int DEFAULT NULL,  `Upload.Elapsted` smallint DEFAULT NULL,  `PacketLoss` mediumint DEFAULT NULL,  `ISP` varchar(45) DEFAULT NULL,  `Interface.ExternalIP` varchar(15) DEFAULT NULL,  `Server.ID` smallint DEFAULT NULL,  `Server.Name` varchar(45) DEFAULT NULL,  `Server.IP` varchar(15) DEFAULT NULL,  `DateTime` datetime DEFAULT CURRENT_TIMESTAMP,  PRIMARY KEY (`index`),  UNIQUE KEY `index_UNIQUE` (`index`)) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-CREATE EVENT AutoDeleteOldData ON SCHEDULE AT CURRENT_TIMESTAMP + INTERVAL 1 DAYON COMPLETION PRESERVEDODELETE FROM speedtest.results where DateTime < DATE_SUB(NOW, INTERVAL 45 DAY);
-
-CREATE USER 'SpeedtestUser'@'%' IDENTIFIED WITH mysql_native_password BY 'Sp33dt3stUs3rPW';
-GRANT ALL ON 'speedtest'.* TO 'SpeedtestUser'$'%';
+CREATE DATABASE IF NOT EXISTS `speedtest`;
+USE `speedtest`;
+CREATE TABLE IF NOT EXISTS `results` (id int NOT NULL DEFAULT 1, TimeStamp timestamp NULL DEFAULT NULL, PingJitter decimal(3,3) DEFAULT NULL, PingLatency decimal(5,5) DEFAULT NULL, DownloadBandwith int DEFAULT NULL, DownloadBytes int DEFAULT NULL, DownloadElapsed smallint DEFAULT NULL, UploadBandwith int DEFAULT NULL, UploadBytes int DEFAULT NULL, UploadElapsted smallint DEFAULT NULL, PacketLoss mediumint DEFAULT NULL, ISP varchar(45) DEFAULT NULL, InterfaceExternalIP varchar(15) DEFAULT NULL, ServerID smallint DEFAULT NULL, ServerName varchar(45) DEFAULT NULL, ServerIP varchar(15) DEFAULT NULL, DateTime datetime DEFAULT CURRENT_TIMESTAMP, PRIMARY KEY (`id`), UNIQUE KEY `index_UNIQUE` (`id`));
+CREATE EVENT IF NOT EXISTS AutoDeleteOldData ON SCHEDULE AT CURRENT_TIMESTAMP + INTERVAL 1 DAY ON COMPLETION PRESERVE DO DELETE FROM speedtest.results where DateTime < DATE_SUB(NOW, INTERVAL 45 DAY);
+CREATE USER IF NOT EXISTS `SpeedtestUser`@`%`;
+ALTER USER `SpeedtestUser`@`%` IDENTIFIED WITH mysql_native_password BY "Sp33dt3stUs3rPW";
+GRANT ALL ON speedtest.* TO `SpeedtestUser`@`%`;
