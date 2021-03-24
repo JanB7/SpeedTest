@@ -59,7 +59,9 @@ def main():
 
     while True:
 
-        result = subprocess.run(['/usr/bin/speedtest', '-f json', '-u kbps'], stdout=subprocess.PIPE, text=True)
+        result = subprocess.run('/usr/bin/speedtest -f json',shell=True, stdout=subprocess.PIPE, text=True)
+
+        print(result)
         result = json.JSONDecoder().decode(result.stdout)
 
         if result['type'] == 'result':
