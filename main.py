@@ -53,12 +53,13 @@ def sqlCommit(data):
 
 
 def main():
-    print(os.environ['MYSQL_PASSWORD'])
+    print()
+    print(os.environ['MYSQL_ROOT_PASSWORD'])
     createDbTables()
 
     while True:
 
-        result = subprocess.run('speedtest -f json -u kbps', stdout=subprocess.PIPE, text=True)
+        result = subprocess.run(['/usr/bin/speedtest', '-f json', '-u kbps'], stdout=subprocess.PIPE, text=True)
         result = json.JSONDecoder().decode(result.stdout)
 
         if result['type'] == 'result':
